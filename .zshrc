@@ -1,6 +1,12 @@
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+# Add local user scripts to PATH
+export PATH="$HOME/.local/bin:$PATH"
+
+# Bind Ctrl+F to tmux-sessionizer
+bindkey -s '^f' 'tmux-sessionizer\n'
+
 ZSH_THEME="robbyrussell"
 
 alias reload-zsh="source ~/.zshrc"
