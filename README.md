@@ -23,13 +23,13 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 ### Git
 
-```
+```bash
 brew install git
 ```
 
 ### Stow
 
-```
+```bash
 brew install stow
 ```
 
@@ -37,15 +37,15 @@ brew install stow
 
 First, clone out the dotfiles repo in your $HOME directory using git
 
-```
-$ git clone git@github.com/rosscondie/.dotfiles.git
-$ cd dotfiles
+```bash
+git clone git@github.com/rosscondie/.dotfiles.git
+cd dotfiles
 ```
 
 then use GNU stow to create symlinks
 
-```
-$ stow .
+```bash
+stow .
 ```
 
 After stowing tmux config, ensure TPM is intalled and plugins are loaded:
