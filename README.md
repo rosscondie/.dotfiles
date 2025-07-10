@@ -48,6 +48,20 @@ then use GNU stow to create symlinks
 stow .
 ```
 
+### Side Note: ⚠️
+
+*Using GNU Stow with `.local` on WSL2 vs macOS*
+
+On **macOS** running `stow .local` inside the `.dotfiles` directory worked as expected.
+
+However on **Ubuntu/WSL2** it seems GNU Stow treats `.local` as a package folder (i.e. it tries to create `~/bin` instead of `~/.local/bin`).
+
+To get around this run stow with the `--target` option to specify the target directory:
+
+```bash
+stow --target=$HOME/.local .local
+```
+
 After stowing tmux config, ensure TPM is intalled and plugins are loaded:
 
 ```bash
