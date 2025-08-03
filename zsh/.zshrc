@@ -4,6 +4,8 @@ export ZSH="$HOME/.oh-my-zsh"
 # Add local user scripts to PATH
 export PATH="$HOME/.local/bin:$PATH"
 
+export PATH="$HOME/.cargo/bin:$PATH"
+
 # Bind Ctrl+F to tmux-sessionizer
 bindkey -s '^f' 'tmux-sessionizer\n'
 
@@ -90,5 +92,11 @@ alias cd="z"
 
 # Plugins
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+
+# Source Zsh config files from ~/.local/share/zsh/
+source $HOME/.local/share/zsh/aliases
+source $HOME/.local/share/zsh/functions
+source $HOME/.local/share/zsh/envs
+source $HOME/.local/share/zsh/init
 
 source $ZSH/oh-my-zsh.sh

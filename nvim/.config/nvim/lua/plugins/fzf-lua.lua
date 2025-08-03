@@ -5,21 +5,27 @@ return {
     -- or if using mini.icons/mini.nvim
     dependencies = { "echasnovski/mini.icons" },
     opts = {},
-    keys={
-        { 
+    keys = {
+        {
             "<leader>ff",
-            function() require('fzf-lua').files() end,
-            desc="[F]ind [F]iles",
+            function()
+                require("fzf-lua").files()
+            end,
+            desc = "[F]ind [F]iles",
         },
-        { 
+        {
             "<leader>fg",
-            function() require('fzf-lua').live_grep() end,
-            desc="[F]ind [G]rep",
+            function()
+                require("fzf-lua").live_grep()
+            end,
+            desc = "[F]ind [G]rep",
         },
-        { 
+        {
             "<leader>fc",
-            function() require('fzf-lua').files({cwd=vim.fn.stdpath("config")}) end,
-            desc="[F]ind in nvim [C]onfig",
+            function()
+                require("fzf-lua").files({ cwd = vim.fn.stdpath("config") })
+            end,
+            desc = "[F]ind in nvim [C]onfig",
         },
         {
             "<leader>fh",
@@ -91,5 +97,5 @@ return {
             end,
             desc = "[/] Live grep the current buffer",
         },
-    }
+    },
 }
