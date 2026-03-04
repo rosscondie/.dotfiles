@@ -11,16 +11,6 @@ Depending on your OS:
 - Mac use Brew 
 - Linux/WSL2 use your package manager (`sudo apt install`, `pacman -S` etc.)
 
-### Tmux Plugin Manager (TPM)
-
-This repo uses [TPM](https://github.com/tmux-plugins/tpm) to manage tmux plugins, including colorschemes and key bindings.
-
-You need to install TPM manually by cloning it to your local tmux plugins directory:
-
-```bash
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-```
-
 ### Git
 
 ```bash
@@ -38,7 +28,7 @@ brew install stow
 First, clone out the dotfiles repo in your $HOME directory using git
 
 ```bash
-git clone git@github.com/rosscondie/.dotfiles.git
+git clone https://github.com/rosscondie/.dotfiles.git
 cd dotfiles
 ```
 
@@ -62,12 +52,14 @@ To get around this run stow with the `--target` option to specify the target dir
 stow --target=$HOME/.local .local
 ```
 
-After stowing tmux config, ensure TPM is intalled and plugins are loaded:
+After stowing tmux config, you need to be in a tmux session:
 
 ```bash
-tmux source-file ~/.tmux.conf
+tmux new -s new-session
 ```
 
-Then inside a tmux session press `prefix + I` to install plugins.
+Once you source with `tmux source-file ~/.config/tmux/tmux.conf` the changes will apply and you can source any new changes with `prefix + r`
 
-Check `.tmux.conf` for the `prefix` key binding. It is usually set to `Ctrl + b` but I find `Ctrl + a` works better for me.
+After watching [@tony-btw](https://www.youtube.com/@tony-btw) on YT I decided to go for the minimal tmux config without plugins.
+
+You can find a link [here](https://www.tonybtw.com/tutorial/tmux/) to his setup and keybindings.
