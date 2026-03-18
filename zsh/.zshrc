@@ -1,15 +1,20 @@
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-# Add local user scripts to PATH
+ZSH_THEME="robbyrussell"
+
+# Go PATH
+export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:$HOME/go/bin
+
+# Cargo PATH
+export PATH=$PATH:"$HOME/.cargo/bin"
+
+# Add user-local scripts to PATH
 export PATH="$HOME/.local/bin:$PATH"
 
-export PATH="$HOME/.cargo/bin:$PATH"
-
-# Bind Ctrl+F to tmux-sessionizer
-bindkey -s '^f' 'tmux-sessionizer\n'
-
-ZSH_THEME="robbyrussell"
+# Which plugins would you like to load?
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 
 alias reload-zsh="source ~/.zshrc"
 alias edit-zsh="nvim ~/.zshrc"
@@ -24,18 +29,26 @@ setopt hist_ignore_dups
 setopt hist_verify
 
 
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='nvim'
+fi
+
+# NVM Setup
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+# --- Zoxide (better cd) ---
+eval "$(zoxide init zsh)"
 
-# ---- FZF -----
-
+# --- fzf ---
 # Set up fzf key bindings and fuzzy completion
 eval "$(fzf --zsh)"
 
 # -- Use fd instead of fzf --
-
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
@@ -74,29 +87,13 @@ _fzf_comprun() {
   esac
 }
 
-# ----- Bat (better cat) -----
-
-export BAT_THEME=tokyonight_night
-
-# ---- Eza (better ls) -----
-
-alias ls="eza --icons=always"
-
-# thefuck alias
-eval $(thefuck --alias)
-
-# ---- Zoxide (better cd) ----
-eval "$(zoxide init zsh)"
-
-alias cd="z"
-
-# Plugins
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
-
-# Source Zsh config files from ~/.local/share/zsh/
-source $HOME/.local/share/zsh/aliases
-source $HOME/.local/share/zsh/functions
-source $HOME/.local/share/zsh/envs
-source $HOME/.local/share/zsh/init
+# --- bat (better cat) ---
+export BAT_THEME=everforest-soft
 
 source $ZSH/oh-my-zsh.sh
+
+# Rebind Ctrl + R to fzf history search
+bindkey '^R' fzf-history-widget
+
+# --- eza (better ls) ---
+alias ls="eza --icons=always --color=always"

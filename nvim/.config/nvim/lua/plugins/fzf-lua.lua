@@ -21,6 +21,15 @@ return {
             desc = "[F]ind [G]rep",
         },
         {
+            "<leader>fG",
+            function()
+                require("fzf-lua").live_grep({
+                    cmd = "rg --column --line-number --no-heading --color=always --smart-case --hidden --no-ignore",
+                })
+            end,
+            desc = "[F]ind [G]rep (all files)",
+        },
+        {
             "<leader>fc",
             function()
                 require("fzf-lua").files({ cwd = vim.fn.stdpath("config") })

@@ -9,7 +9,7 @@ Ensure you have the following installed on your system
 Depending on your OS:
 
 - Mac use Brew 
-- Linux/WSL2 use your package manager (`sudo apt install`, `pacman -S` etc.)
+- Linux/WSL2 use your package manager (`sudo apt install`, `sudo dnf install`, `pacman -S` etc.)
 
 ### Git
 
@@ -22,6 +22,23 @@ brew install git
 ```bash
 brew install stow
 ```
+
+### Additional Tools
+
+These tools are used by the configurations in this repo:
+
+#### Terminal & UI
+- **Alacritty** - Terminal emulator
+- **Wofi** - Application launcher (Wayland)
+- **Nerd Fonts** - Specifically CaskaydiaMono Nerd Font
+
+#### CLI Tools
+- **fzf** - Fuzzy finder
+- **fd** - Better find
+- **eza** - Better ls
+- **bat** - Better cat
+- **zoxide** - Better cd
+- **ripgrep** - Better grep
 
 ## Installation
 
@@ -63,3 +80,19 @@ Once you source with `tmux source-file ~/.config/tmux/tmux.conf` the changes wil
 After watching [@tony-btw](https://www.youtube.com/@tony-btw) on YT I decided to go for the minimal tmux config without plugins.
 
 You can find a link [here](https://www.tonybtw.com/tutorial/tmux/) to his setup and keybindings.
+
+## Usage Tips
+
+### Project Launcher Script
+
+The `projects-wofi.sh` script allows you to quickly open projects in tmux sessions using wofi.
+
+**Note:** The script is configured to search `~/dev` by default. Edit the script to change this to your preferred projects directory.
+
+**Recommended keybinding:** `Super + P` (or your preferred shortcut)
+
+Set this up in your DE/WM configuration:
+- **GNOME:** Settings → Keyboard → Custom Shortcuts
+- **KDE:** System Settings → Shortcuts → Custom Shortcuts
+- **Hyprland/Sway:** Add to config: `bind = SUPER, P, exec, ~/.local/bin/projects-wofi.sh`
+- **i3/bspwm:** Add to config: `bindsym $mod+p exec ~/.local/bin/projects-wofi.sh`
