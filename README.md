@@ -42,14 +42,14 @@ These tools are used by the configurations in this repo:
 
 ## Installation
 
-First, clone out the dotfiles repo in your $HOME directory using git
+Clone this repository to your $HOME directory:
 
 ```bash
-git clone https://github.com/rosscondie/.dotfiles.git
+git clone <repository-url>
 cd dotfiles
 ```
 
-then use GNU stow to create symlinks
+Then use GNU stow to create symlinks
 
 ```bash
 stow .
