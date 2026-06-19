@@ -96,3 +96,33 @@ Set this up in your DE/WM configuration:
 - **KDE:** System Settings → Shortcuts → Custom Shortcuts
 - **Hyprland/Sway:** Add to config: `bind = SUPER, P, exec, ~/.local/bin/projects-wofi.sh`
 - **i3/bspwm:** Add to config: `bindsym $mod+p exec ~/.local/bin/projects-wofi.sh`
+
+### Tmux Dev Layout (`tdl`)
+
+The `tdl` script opens a pre-configured tmux layout for development:
+
+- **Left (main):** `nvim .`
+- **Right (30%):** AI agent (defaults to `opencode`)
+- **Bottom strip (15%):** spare terminal
+
+**Usage:**
+```bash
+tdl                                    # opens with opencode
+tdl aider                              # opens with aider
+tdl "aider --model claude-opus-4-5"   # opens with a specific model
+```
+
+Detach cleanly from the session with `prefix + d`. Reattach later with `tmux a`.
+
+### keyd
+
+keyd handles low-level key remapping via a systemd service. The config is stored in this repo for reference but cannot be stowed as it lives in `/etc/keyd/` and requires root.
+
+Current mappings:
+- `capslock` — acts as `Escape` when tapped, `Control` when held
+
+**Deploy:**
+```bash
+sudo cp keyd/etc/keyd/default.conf /etc/keyd/default.conf
+sudo systemctl enable --now keyd
+```
