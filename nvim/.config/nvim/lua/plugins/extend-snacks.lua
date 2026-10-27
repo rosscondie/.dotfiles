@@ -24,12 +24,12 @@ return {
         },
       },
     },
-    terminal = {
-      win = {
-        position = "bottom",
-        height = 0.25,
-      },
-    },
+    -- terminal = {
+    --   win = {
+    --     position = "bottom",
+    --     height = 0.25,
+    --   },
+    -- },
     dashboard = {
       width = 65,
       sections = {

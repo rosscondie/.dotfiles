@@ -1,0 +1,591 @@
+// Input device configuration.
+// Find the full list of options on the wiki:
+// https://yalter.github.io/niri/Configuration:-Input
+// Override environment for processes spawned by niri (qs, firefox, alacritty etc.)
+debug {
+    // Allows notification actions and window activation from Noctalia.
+    honor-xdg-activation-with-invalid-serial
+    // Force niri to render on Intel iGPU
+    render-drm-device "/dev/dri/renderD128"
+}
+// Omit client side decorations
+prefer-no-csd
+overview {
+    zoom 0.75
+}
+input {
+    keyboard {
+        repeat-rate 35
+        repeat-delay 200
+        xkb {
+
+        }
+        // Enable numlock on startup
+        numlock
+    }
+    touchpad {
+        // off
+        tap
+        // dwt
+        // dwtp
+        // drag false
+        // drag-lock
+        natural-scroll
+ // accel-speed 0.2
+        // accel-profile "flat"
+        // scroll-method "two-finger"
+        // disabled-on-external-mouse
+    }
+    mouse {
+
+    }
+    trackpoint {
+ // off
+        // natural-scroll
+        // accel-speed 0.2
+        // accel-profile "flat"
+        // scroll-method "on-button-down"
+        // scroll-button 273
+        // scroll-button-lock
+        // middle-emulation
+
+    }
+    // Focus windows and outputs automatically when moving the mouse into them.
+    // Setting max-scroll-amount="0%" makes it work only on windows already fully on screen.
+    focus-follows-mouse max-scroll-amount="0%"
+}
+// You can configure outputs by their name, which you can find
+// by running `niri msg outputs` while inside a niri instance.
+// The built-in laptop monitor is usually called "eDP-1".
+// Find more information on the wiki:
+// https://yalter.github.io/niri/Configuration:-Outputs
+// --- Laptop screen ---
+output "eDP-1" {
+    mode "1920x1200@60.001"
+    scale 1
+    transform "normal"
+    position x=0 y=0
+}
+// --- Work: Monitor 1 (HP S270n - 6CM9131QNQ) ---
+// This output is ignored when not connected
+output "HP Inc. HP S270n 6CM9131QNQ" {
+    mode "3840x2160@59.996"
+    scale 1.5
+    transform "normal"
+    position x=1920 y=0
+}
+// --- Work: Monitor 2 (HP S270n - 6CM910209N) ---
+// This output is ignored when not connected
+output "HP Inc. HP S270n 6CM910209N" {
+    mode "3840x2160@59.996"
+    scale 1.5
+    transform "normal"
+    position x=4480 y=0
+}
+// Window positioning and size
+layout {
+    // Set gaps around windows in logical pixels.
+    gaps 12
+    center-focused-column "never"
+    // You can customize the widths that "switch-preset-column-width" (Mod+R) toggles between.
+    preset-column-widths {
+        // Proportion sets the width as a fraction of the output width, taking gaps into account.
+        // For example, you can perfectly fit four windows sized "proportion 0.25" on an output.
+        // The default preset widths are 1/3, 1/2 and 2/3 of the output.
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+ // Fixed sets the width in logical pixels exactly.
+        // fixed 1920
+    }
+    // You can change the default width of the new windows.
+    default-column-width {
+        proportion 0.5
+    }
+    // You can change how the focus ring looks.
+    focus-ring {
+        width 1.5
+        active-color "#D3C6AA"
+        inactive-color "#505050"
+    }
+    border {
+        // If you enable the border, you probably want to disable the focus ring.
+        off
+        width 2
+        active-color "#ffc87f"
+        inactive-color "#505050"
+        urgent-color "#9b0000"
+    }
+    // You can enable drop shadows for windows.
+    shadow {
+        softness 30
+        spread 5
+        offset x=0 y=5
+        color "#0007"
+    }
+    struts {
+
+    }
+}
+// Spawn process at startup
+spawn-at-startup "qs" "-c" "noctalia-shell"
+spawn-at-startup "solaar" "--window=hide"
+// Hot key bindings on start
+hotkey-overlay {
+    skip-at-startup
+}
+// Path screenshots are saved
+screenshot-path "~/Pictures/Screenshots/%d-%m-%Y %H-%M-%S.png"
+// You can also set this to null to disable saving screenshots to disk.
+// screenshot-path null
+// Animation settings.
+// The wiki explains how to configure individual animations:
+// https://yalter.github.io/niri/Configuration:-Animations
+animations {
+ // Uncomment to turn off all animations.
+    // off
+
+    // Slow down all animations by this factor. Values below 1 speed them up instead.
+    // slowdown 3.0
+
+}
+// Window rules let you adjust behavior for individual windows.
+// Find more information on the wiki:
+// https://yalter.github.io/niri/Configuration:-Window-Rules
+// Work around WezTerm's initial configure bug
+// by setting an empty default-column-width.
+window-rule {
+    // This regular expression is intentionally made as specific as possible,
+    // since this is the default config, and we want no false positives.
+    // You can get away with just app-id="wezterm" if you want.
+    match app-id="^org\\.wezfurlong\\.wezterm$"
+    default-column-width {
+
+    }
+}
+// Open the Firefox picture-in-picture player as floating by default.
+window-rule {
+    // This app-id regular expression will work for both:
+    // - host Firefox (app-id is "firefox")
+    // - Flatpak Firefox (app-id is "org.mozilla.firefox")
+    match app-id="firefox$" title="^Picture-in-Picture$"
+    open-floating true
+}
+// Example: block out two password managers from screen capture.
+// (This example rule is commented out with a "/-" in front.)
+/-window-rule {
+match app-id=r#"^org\.keepassxc\.KeePassXC$"#
+match app-id=r#"^org\.gnome\.World\.Secrets$"#
+block-out-from "screen-capture"
+// Use this instead if you want them visible on third-party screenshot tools.
+// block-out-from "screencast"
+}
+// Example: enable rounded corners for all windows.
+// (This example rule is commented out with a "/-" in front.)
+/-window-rule {
+geometry-corner-radius 12
+clip-to-geometry true
+}
+binds {
+    // Show keybindings
+    Mod+Shift+Slash {
+        show-hotkey-overlay
+    }
+    // --- Application Bindings --- \\
+    // Open Terminal
+    Mod+Return hotkey-overlay-title="Open a Terminal: alacritty" {
+        spawn "alacritty"
+    }
+    // Open Application Launcher
+    Mod+Space hotkey-overlay-title="Run an Application: fuzzel" {
+        spawn "fuzzel"
+    }
+    // Open Browser
+    Mod+B hotkey-overlay-title="Open Browser: firefox" {
+        spawn "firefox"
+    }
+    // Open GoLand IDE
+    Mod+G hotkey-overlay-title="Open GoLand: goland ide" {
+        spawn "goland"
+    }
+    // Open projects.sh with wofi
+    Mod+P hotkey-overlay-title="Open Projects: w/ wofi" {
+        spawn-sh "$HOME/.local/bin/projects-wofi.sh"
+    }
+    // --- Noctalia Specific Keybinds --- \\
+    // Open Noctalia Emoji Picker
+    Alt+Period hotkey-overlay-title="Open Emoji Picker: noctalia emoji" {
+        spawn-sh "qs -c noctalia-shell ipc call launcher emoji"
+    }
+    // Lock Screen (swaylock) - allow-when-locked so this also works as a
+    // recovery key if noctalia's lock (reachable via the session menu below)
+    // ever crashes while active
+    Mod+Escape allow-when-locked=true hotkey-overlay-title="Lock the Screen: swaylock" {
+        spawn "swaylock"
+    }
+    // Noctalia Settings
+    // Mod+Shift+S hotkey-overlay-title="Open Noctalia Settings" { spawn-sh "qs -c noctalia-shell ipc call settings toggle"; }
+    // Noctalia Session Menu
+    Mod+Alt+L hotkey-overlay-title="Open Noctalia Session Menu" {
+        spawn-sh "qs -c noctalia-shell ipc call sessionMenu toggle"
+    }
+    // Toggle Noctalia Night Light
+    Mod+N hotkey-overlay-title="Toggle Noctalia Night Light" {
+        spawn-sh "qs -c noctalia-shell ipc call nightLight toggle"
+    }
+    // Open Clipboard History
+    Alt+C hotkey-overlay-title="Open Clipboard History" {
+        spawn-sh "qs -c noctalia-shell ipc call launcher clipboard"
+    }
+    // Example volume keys mappings for PipeWire & WirePlumber.
+    // The allow-when-locked=true property makes them work even when the session is locked.
+    // Using spawn-sh allows to pass multiple arguments together with the command.
+    XF86AudioRaiseVolume allow-when-locked=true cooldown-ms=200 {
+        spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+"
+    }
+    XF86AudioLowerVolume allow-when-locked=true cooldown-ms=200 {
+        spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-"
+    }
+    XF86AudioMute allow-when-locked=true {
+        spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+    }
+    XF86AudioMicMute allow-when-locked=true {
+        spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+    }
+    // Example brightness key mappings for brightnessctl.
+    // You can use regular spawn with multiple arguments too (to avoid going through "sh"),
+    // but you need to manually put each argument in separate "" quotes.
+    XF86MonBrightnessUp allow-when-locked=true {
+        spawn "brightnessctl" "--class=backlight" "set" "+10%"
+    }
+    XF86MonBrightnessDown allow-when-locked=true {
+        spawn "brightnessctl" "--class=backlight" "set" "10%-"
+    }
+    // Open/close the Overview: a zoomed-out view of workspaces and windows.
+    // You can also move the mouse into the top-left hot corner,
+    // or do a four-finger swipe up on a touchpad.
+    Mod+O repeat=false {
+        toggle-overview
+    }
+    Mod+Q repeat=false {
+        close-window
+    }
+    Mod+Left {
+        focus-column-left
+    }
+    Mod+Down {
+        focus-window-down
+    }
+    Mod+Up {
+        focus-window-up
+    }
+    Mod+Right {
+        focus-column-right
+    }
+    Mod+H {
+        focus-column-left
+    }
+    Mod+J {
+        focus-window-down
+    }
+    Mod+K {
+        focus-window-up
+    }
+    Mod+L {
+        focus-column-right
+    }
+    // Mod+Shift+Left  { move-column-left; }
+    Mod+Shift+Down {
+        move-window-down
+    }
+    Mod+Shift+Up {
+        move-window-up
+    }
+    // Mod+Shift+Right { move-column-right; }
+    Mod+Shift+H {
+        move-column-left-or-to-monitor-left
+    }
+    Mod+Shift+J {
+        move-window-down
+    }
+    Mod+Shift+K {
+        move-window-up
+    }
+    Mod+Shift+L {
+        move-column-right-or-to-monitor-right
+    }
+    Mod+Home {
+        focus-column-first
+    }
+    Mod+End {
+        focus-column-last
+    }
+    Mod+Ctrl+Home {
+        move-column-to-first
+    }
+    Mod+Ctrl+End {
+        move-column-to-last
+    }
+    Mod+Shift+Left {
+        focus-monitor-left
+    }
+    Mod+Shift+Right {
+        focus-monitor-right
+    }
+    // Alternatively, there are commands to move just a single window:
+    // Mod+Shift+Ctrl+Left  { move-window-to-monitor-left; }
+    // And you can also move a whole workspace to another monitor:
+    // Mod+Shift+Ctrl+Left  { move-workspace-to-monitor-left; }
+    Mod+U {
+        focus-workspace-down
+    }
+    Mod+I {
+        focus-workspace-up
+    }
+    Mod+Ctrl+U {
+        move-column-to-workspace-down
+    }
+    Mod+Ctrl+I {
+        move-column-to-workspace-up
+    }
+    // Alternatively, there are commands to move just a single window:
+    // Mod+Ctrl+Page_Down { move-window-to-workspace-down; }
+    Mod+Shift+U {
+        move-workspace-down
+    }
+    Mod+Shift+I {
+        move-workspace-up
+    }
+    // You can bind mouse wheel scroll ticks using the following syntax.
+    // These binds will change direction based on the natural-scroll setting.
+    // To avoid scrolling through workspaces really fast, you can use
+    // the cooldown-ms property. The bind will be rate-limited to this value.
+    // You can set a cooldown on any bind, but it's most useful for the wheel.
+    Mod+WheelScrollDown cooldown-ms=150 {
+        focus-workspace-down
+    }
+    Mod+WheelScrollUp cooldown-ms=150 {
+        focus-workspace-up
+    }
+    Mod+Ctrl+WheelScrollDown cooldown-ms=150 {
+        move-column-to-workspace-down
+    }
+    Mod+Ctrl+WheelScrollUp cooldown-ms=150 {
+        move-column-to-workspace-up
+    }
+    Mod+WheelScrollRight {
+        focus-column-right
+    }
+    Mod+WheelScrollLeft {
+        focus-column-left
+    }
+    Mod+Ctrl+WheelScrollRight {
+        move-column-right
+    }
+    Mod+Ctrl+WheelScrollLeft {
+        move-column-left
+    }
+    // Usually scrolling up and down with Shift in applications results in
+    // horizontal scrolling; these binds replicate that.
+    Mod+Shift+WheelScrollDown {
+        focus-column-right
+    }
+    Mod+Shift+WheelScrollUp {
+        focus-column-left
+    }
+    Mod+Ctrl+Shift+WheelScrollDown {
+        move-column-right
+    }
+    Mod+Ctrl+Shift+WheelScrollUp {
+        move-column-left
+    }
+    // Similarly, you can bind touchpad scroll "ticks".
+    // Touchpad scrolling is continuous, so for these binds it is split into
+    // discrete intervals.
+    // These binds are also affected by touchpad's natural-scroll, so these
+    // example binds are "inverted", since we have natural-scroll enabled for
+    // touchpads by default.
+    // Mod+TouchpadScrollDown { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02+"; }
+    // Mod+TouchpadScrollUp   { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02-"; }
+    // You can refer to workspaces by index. However, keep in mind that
+    // niri is a dynamic workspace system, so these commands are kind of
+    // "best effort". Trying to refer to a workspace index bigger than
+    // the current workspace count will instead refer to the bottommost
+    // (empty) workspace.
+    //
+    // For example, with 2 workspaces + 1 empty, indices 3, 4, 5 and so on
+    // will all refer to the 3rd workspace.
+    Mod+1 {
+        focus-workspace 1
+    }
+    Mod+2 {
+        focus-workspace 2
+    }
+    Mod+3 {
+        focus-workspace 3
+    }
+    Mod+4 {
+        focus-workspace 4
+    }
+    Mod+5 {
+        focus-workspace 5
+    }
+    Mod+6 {
+        focus-workspace 6
+    }
+    Mod+7 {
+        focus-workspace 7
+    }
+    Mod+8 {
+        focus-workspace 8
+    }
+    Mod+9 {
+        focus-workspace 9
+    }
+    Mod+Shift+1 {
+        move-column-to-workspace 1
+    }
+    Mod+Shift+2 {
+        move-column-to-workspace 2
+    }
+    Mod+Shift+3 {
+        move-column-to-workspace 3
+    }
+    Mod+Shift+4 {
+        move-column-to-workspace 4
+    }
+    Mod+Shift+5 {
+        move-column-to-workspace 5
+    }
+    Mod+Shift+6 {
+        move-column-to-workspace 6
+    }
+    Mod+Shift+7 {
+        move-column-to-workspace 7
+    }
+    Mod+Shift+8 {
+        move-column-to-workspace 8
+    }
+    Mod+Shift+9 {
+        move-column-to-workspace 9
+    }
+    // Alternatively, there are commands to move just a single window:
+    // Mod+Ctrl+1 { move-window-to-workspace 1; }
+    // Switches focus between the current and the previous workspace.
+    // Mod+Tab { focus-workspace-previous; }
+    // The following binds move the focused window in and out of a column.
+    // If the window is alone, they will consume it into the nearby column to the side.
+    // If the window is already in a column, they will expel it out.
+    Mod+Comma {
+        consume-or-expel-window-left
+    }
+    Mod+Period {
+        consume-or-expel-window-right
+    }
+    Mod+R {
+        switch-preset-column-width
+    }
+    // Cycling through the presets in reverse order is also possible.
+    // Mod+R { switch-preset-column-width-back; }
+    Mod+Shift+R {
+        switch-preset-window-height
+    }
+    Mod+Ctrl+R {
+        reset-window-height
+    }
+    Mod+F {
+        maximize-column
+    }
+    Mod+Shift+F {
+        fullscreen-window
+    }
+    // Expand the focused column to space not taken up by other fully visible columns.
+    // Makes the column "fill the rest of the space".
+    Mod+Ctrl+F {
+        expand-column-to-available-width
+    }
+    Mod+C {
+        center-column
+    }
+    // Center all fully visible columns on screen.
+    Mod+Ctrl+C {
+        center-visible-columns
+    }
+    // Finer width adjustments.
+    // This command can also:
+    // * set width in pixels: "1000"
+    // * adjust width in pixels: "-5" or "+5"
+    // * set width as a percentage of screen width: "25%"
+    // * adjust width as a percentage of screen width: "-10%" or "+10%"
+    // Pixel sizes use logical, or scaled, pixels. I.e. on an output with scale 2.0,
+    // set-column-width "100" will make the column occupy 200 physical screen pixels.
+    Mod+Minus {
+        set-column-width "-10%"
+    }
+    Mod+Equal {
+        set-column-width "+10%"
+    }
+    // Finer height adjustments when in column with other windows.
+    Mod+Shift+Minus {
+        set-window-height "-10%"
+    }
+    Mod+Shift+Equal {
+        set-window-height "+10%"
+    }
+    // Move the focused window between the floating and the tiling layout.
+    Mod+V {
+        toggle-window-floating
+    }
+    Mod+Shift+V {
+        switch-focus-between-floating-and-tiling
+    }
+    // Toggle tabbed column display mode.
+    // Windows in this column will appear as vertical tabs,
+    // rather than stacked on top of each other.
+    Mod+W {
+        toggle-column-tabbed-display
+    }
+    // Actions to switch layouts.
+    // Note: if you uncomment these, make sure you do NOT have
+    // a matching layout switch hotkey configured in xkb options above.
+    // Having both at once on the same hotkey will break the switching,
+    // since it will switch twice upon pressing the hotkey (once by xkb, once by niri).
+    // Mod+Space       { switch-layout "next"; }
+    // Mod+Shift+Space { switch-layout "prev"; }
+    // Print: region select -> save with GB timestamp -> copy to clipboard
+    Print {
+        spawn-sh "FILE=\"$HOME/Pictures/Screenshots/$(date '+%d-%m-%Y %H-%M-%S').png\" && grim -g \"$(slurp)\" \"$FILE\" && wl-copy < \"$FILE\""
+    }
+    // Ctrl+Print: region select -> save with GB timestamp -> open in Gradia for annotation
+    Ctrl+Print {
+        spawn-sh "FILE=\"$HOME/Pictures/Screenshots/$(date '+%d-%m-%Y %H-%M-%S').png\" && grim -g \"$(slurp)\" \"$FILE\" && flatpak run be.alexandervanhee.gradia \"$FILE\""
+    }
+    Alt+Print {
+        screenshot-window
+    }
+    // Applications such as remote-desktop clients and software KVM switches may
+    // request that niri stops processing the keyboard shortcuts defined here
+    // so they may, for example, forward the key presses as-is to a remote machine.
+    // It's a good idea to bind an escape hatch to toggle the inhibitor,
+    // so a buggy application can't hold your session hostage.
+    //
+    // The allow-inhibiting=false property can be applied to other binds as well,
+    // which ensures niri always processes them, even when an inhibitor is active.
+    Mod+Shift+Escape allow-inhibiting=false {
+        toggle-keyboard-shortcuts-inhibit
+    }
+    // The quit action will show a confirmation dialog to avoid accidental exits.
+    Mod+Shift+E {
+        quit
+    }
+    Ctrl+Alt+Delete {
+        quit
+    }
+    // Powers off the monitors. To turn them back on, do any input like
+    // moving the mouse or pressing any other key.
+    Mod+Shift+P {
+        power-off-monitors
+    }
+}
+include "./noctalia.kdl"
+

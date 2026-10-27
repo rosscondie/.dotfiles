@@ -1,0 +1,164 @@
+# Sway config for the random_freeze control experiment (2026-10-14).
+# Mirrors the main niri keybinds and runs Noctalia v5, so everyday use feels similar.
+# Sway is wlroots-based (not Smithay); the point is to see whether the instant resets also happen here.
+
+set $mod Mod4
+set $left h
+set $down j
+set $up k
+set $right l
+
+# --- Outputs (laptop at 125% like GNOME; externals sit to its right) ---
+# A 1920-wide panel at scale 1.25 is 1536 logical px wide, so the externals start at x=1536.
+output eDP-1 mode 1920x1200@60.001Hz scale 1.25 position 0 0
+output "Dell Inc. DELL S2421HN 8QW6TJ3" scale 1 position 1536 0
+output "HP Inc. HP S270n 6CM9131QNQ" mode 3840x2160@59.996Hz scale 1.5 position 1536 0
+output "HP Inc. HP S270n 6CM910209N" mode 3840x2160@59.996Hz scale 1.5 position 4096 0
+
+# --- Input (same as niri) ---
+input type:keyboard {
+    repeat_rate 35
+    repeat_delay 200
+    xkb_numlock enabled
+}
+input type:touchpad {
+    tap enabled
+    natural_scroll enabled
+}
+
+# --- Look ---
+default_border pixel 1
+default_floating_border pixel 1
+# When an app asks for attention (e.g. Chrome opening a link), jump to it, even on another workspace
+focus_on_window_activation focus
+# Border colours come from Noctalia's Sway template (Noctalia settings > templates > Sway).
+gaps inner 12
+focus_follows_mouse yes
+
+# --- Startup ---
+exec noctalia
+exec ~/.local/bin/sway-ws.sh init
+exec solaar --window=hide
+exec ~/.local/bin/vier-vpn tray
+# Tell systemd/portals that this is a sway session
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+
+# --- Apps (same keys as niri) ---
+bindsym $mod+Return exec alacritty
+bindsym $mod+Space exec fuzzel
+bindsym $mod+b exec firefox
+bindsym $mod+g exec goland
+bindsym Mod1+f exec nautilus
+bindsym $mod+p exec $HOME/.local/bin/projects-wofi.sh
+bindsym Mod1+period exec noctalia msg panel-toggle launcher "/emo "
+bindsym Mod1+c exec noctalia msg panel-toggle clipboard
+bindsym $mod+Mod1+l exec noctalia msg panel-toggle session
+bindsym $mod+n exec noctalia msg nightlight-toggle
+bindsym $mod+s exec noctalia msg panel-toggle control-center
+bindsym $mod+comma exec noctalia msg settings-toggle
+# Window switcher: lists every open window on every workspace (like niri's overview)
+bindsym $mod+o exec noctalia msg window-switcher
+bindsym Mod1+Tab exec noctalia msg window-switcher hold
+bindsym --locked $mod+Escape exec noctalia msg session lock
+
+# --- Media keys ---
+bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+
+bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-
+bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bindsym --locked XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+bindsym --locked XF86MonBrightnessUp exec brightnessctl --class=backlight set +10%
+bindsym --locked XF86MonBrightnessDown exec brightnessctl --class=backlight set 10%-
+
+# --- Windows ---
+bindsym $mod+q kill
+# Like niri: Super+F 'maximizes' (tabs the windows so this one fills the screen, bar stays), again to restore.
+# Super+Shift+F is real fullscreen.
+bindsym $mod+f layout toggle tabbed split
+bindsym $mod+Shift+f fullscreen
+# Cycle through windows in the current group (handy for tabs after Super+F)
+bindsym $mod+Tab focus next sibling
+bindsym $mod+Shift+Tab focus prev sibling
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+e layout toggle split
+bindsym $mod+w layout tabbed
+bindsym $mod+v splitv
+bindsym $mod+Shift+v splith
+floating_modifier $mod normal
+# Keep dialogs (Save/Open etc.) a sensible size and centred below the bar, not under it
+floating_maximum_size 1300 x 800
+for_window [app_id="xdg-desktop-portal-gtk"] resize set 1000 650, move position center
+for_window [window_type="dialog"] move position center
+# Noctalia's settings window floats (as in the Noctalia docs)
+for_window [app_id="dev.noctalia.Noctalia"] floating enable, resize set 1100 800
+
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# Move focus / windows between monitors
+bindsym $mod+Ctrl+$left focus output left
+bindsym $mod+Ctrl+$right focus output right
+bindsym $mod+Ctrl+Shift+$left move container to output left
+bindsym $mod+Ctrl+Shift+$right move container to output right
+
+# Resize (niri's Mod+R preset widths become a resize mode here)
+mode "resize" {
+    bindsym $left resize shrink width 10ppt
+    bindsym $right resize grow width 10ppt
+    bindsym $up resize shrink height 10ppt
+    bindsym $down resize grow height 10ppt
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# --- Workspaces (same keys as niri) ---
+# Each monitor has its own 1-9, like niri (see ~/.local/bin/sway-ws.sh).
+bindsym $mod+1 exec ~/.local/bin/sway-ws.sh focus 1
+bindsym $mod+2 exec ~/.local/bin/sway-ws.sh focus 2
+bindsym $mod+3 exec ~/.local/bin/sway-ws.sh focus 3
+bindsym $mod+4 exec ~/.local/bin/sway-ws.sh focus 4
+bindsym $mod+5 exec ~/.local/bin/sway-ws.sh focus 5
+bindsym $mod+6 exec ~/.local/bin/sway-ws.sh focus 6
+bindsym $mod+7 exec ~/.local/bin/sway-ws.sh focus 7
+bindsym $mod+8 exec ~/.local/bin/sway-ws.sh focus 8
+bindsym $mod+9 exec ~/.local/bin/sway-ws.sh focus 9
+bindsym $mod+Shift+1 exec ~/.local/bin/sway-ws.sh move 1
+bindsym $mod+Shift+2 exec ~/.local/bin/sway-ws.sh move 2
+bindsym $mod+Shift+3 exec ~/.local/bin/sway-ws.sh move 3
+bindsym $mod+Shift+4 exec ~/.local/bin/sway-ws.sh move 4
+bindsym $mod+Shift+5 exec ~/.local/bin/sway-ws.sh move 5
+bindsym $mod+Shift+6 exec ~/.local/bin/sway-ws.sh move 6
+bindsym $mod+Shift+7 exec ~/.local/bin/sway-ws.sh move 7
+bindsym $mod+Shift+8 exec ~/.local/bin/sway-ws.sh move 8
+bindsym $mod+Shift+9 exec ~/.local/bin/sway-ws.sh move 9
+
+# --- Screenshots (same as niri) ---
+bindsym Print exec ~/.local/bin/sway-shot.sh region
+bindsym Ctrl+Print exec ~/.local/bin/sway-shot.sh edit
+bindsym Mod1+Print exec ~/.local/bin/sway-shot.sh window
+bindsym Shift+Print exec ~/.local/bin/sway-shot.sh freeze
+
+# --- Session ---
+bindsym $mod+Shift+slash exec ~/.local/bin/sway-keys.sh
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaymsg exit'
+
+include /etc/sway/config.d/*
+
+
+include ~/.config/sway/noctalia

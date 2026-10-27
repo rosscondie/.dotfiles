@@ -1,15 +1,19 @@
 [general]
 import = [
-    "~/.config/alacritty/themes/themes/everforest_dark.toml"
+    "~/.config/alacritty/themes/themes/tokyo_night.toml",
 ]
 
 [font]
 normal.family = "CaskaydiaMono Nerd Font"
-size = 16
+size = 14
 
 [window]
 opacity = 0.95
 padding.x = 10
 padding.y = 10
-startup_mode = "Maximized"
 decorations = "None"
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B\r"

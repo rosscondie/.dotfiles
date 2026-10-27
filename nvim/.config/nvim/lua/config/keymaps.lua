@@ -8,3 +8,7 @@ vim.keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory
 vim.keymap.set("n", "<leader>cp", function()
   vim.fn.setreg("+", vim.fn.expand("%:p"))
 end, { desc = "Copy file path" })
+
+-- Paste clipboard as new lines below/above the cursor line
+vim.keymap.set("n", "<leader>p", "<cmd>put +<cr>", { desc = "Paste below as lines" })
+vim.keymap.set("n", "<leader>P", "<cmd>put! +<cr>", { desc = "Paste above as lines" })

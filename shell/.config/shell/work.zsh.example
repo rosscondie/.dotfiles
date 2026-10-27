@@ -1,0 +1,7 @@
+# Copy to ~/.config/shell/work.zsh and fill in. Gitignored; sourced from ~/.zshrc if it exists.
+# Use it for work-specific settings that shouldn't be public (kube configs, private module hosts, VPN helpers).
+
+# export KUBECONFIG=~/.kube/config:~/.kube/<cluster>.yaml
+# export GOPRIVATE=<private-git-host>
+# export GONOSUMDB=<private-git-host>
+# source ~/.config/shell/vpn-helpers.sh

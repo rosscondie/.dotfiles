@@ -3,6 +3,18 @@ export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="robbyrussell"
 
+# --- keep PATH entries unique ---
+typeset -U path PATH
+
+# -- Krew Plugin ---
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+# --- Private tokens (kept out of the dotfiles repo) ---
+[ -f ~/.config/shell/secrets.zsh ] && source ~/.config/shell/secrets.zsh
+
+# --- Work-specific settings (kube, go private modules, vpn helpers) ---
+[ -f ~/.config/shell/work.zsh ] && source ~/.config/shell/work.zsh
+
 # Go PATH
 export PATH=$PATH:/usr/local/go/bin
 export PATH=$PATH:$HOME/go/bin
@@ -18,6 +30,7 @@ plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 
 alias reload-zsh="source ~/.zshrc"
 alias edit-zsh="nvim ~/.zshrc"
+alias gl5="git --no-pager log --oneline -n 5"
 
 # history setup
 HISTFILE=$HOME/.zhistory
@@ -27,7 +40,6 @@ setopt share_history
 setopt hist_expire_dups_first
 setopt hist_ignore_dups
 setopt hist_verify
-
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
@@ -97,3 +109,15 @@ bindkey '^R' fzf-history-widget
 
 # --- eza (better ls) ---
 alias ls="eza --icons=always --color=always"
+
+# pnpm
+export PNPM_HOME="/home/rcondie/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# opencode
+export PATH=/home/rcondie/.opencode/bin:$PATH
+

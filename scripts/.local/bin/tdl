@@ -6,11 +6,13 @@
 #          tdl "aider --model claude-opus-4-5"
 
 current_dir="${PWD}"
-ai="${1:-opencode}"
+ai="${1:-claude}"
 session_name="$(basename "$current_dir")"
 
 # If not in tmux, create a named session and re-run tdl inside it
 if [[ -z $TMUX ]]; then
+  # Shrink the font for this Alacritty window only (runtime change, config untouched)
+  [[ -n $ALACRITTY_SOCKET ]] && alacritty msg config font.size=12.5 2>/dev/null
   tmux new-session -s "$session_name" -c "$current_dir" \; send-keys "tdl $*" C-m
   exit
 fi
@@ -21,14 +23,13 @@ editor_pane="$TMUX_PANE"
 # Name the window after the project directory
 tmux rename-window -t "$editor_pane" "$session_name"
 
-# Split off a terminal strip at the bottom (15% height)
-terminal_pane=$(tmux split-window -v -p 15 -t "$editor_pane" -c "$current_dir" -P -F '#{pane_id}')
+# Split off a terminal strip at the bottom (10 rows tall)
+terminal_pane=$(tmux split-window -v -l 10 -t "$editor_pane" -c "$current_dir" -P -F '#{pane_id}')
 
-# Split the editor pane — AI panel on the right (30% width)
-ai_pane=$(tmux split-window -h -p 30 -t "$editor_pane" -c "$current_dir" -P -F '#{pane_id}')
-
-# Start the AI agent in the right pane
-tmux send-keys -t "$ai_pane" "$ai" C-m
+# Split the editor pane — AI panel on the right (66 columns wide)
+# Run the AI agent as the pane's command so it starts without waiting for .zshrc;
+# drop into a normal shell when it exits
+ai_pane=$(tmux split-window -h -l 66 -t "$editor_pane" -c "$current_dir" -P -F '#{pane_id}' "$ai; exec zsh")
 
 # Open neovim in the main (left) pane
 tmux send-keys -t "$editor_pane" "${EDITOR:-nvim} ." C-m
