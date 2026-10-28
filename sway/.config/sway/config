@@ -14,6 +14,8 @@ output eDP-1 mode 1920x1200@60.001Hz scale 1.25 position 0 0
 output "Dell Inc. DELL S2421HN 8QW6TJ3" scale 1 position 1536 0
 output "HP Inc. HP S270n 6CM9131QNQ" mode 3840x2160@59.996Hz scale 1.5 position 1536 0
 output "HP Inc. HP S270n 6CM910209N" mode 3840x2160@59.996Hz scale 1.5 position 4096 0
+output "HP Inc. HP Z27q G3 CN414417ZJ" position 1536 0
+output "HP Inc. HP Z27q G3 CN421819CZ" position 4096 0
 
 # --- Input (same as niri) ---
 input type:keyboard {
