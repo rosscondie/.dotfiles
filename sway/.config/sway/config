@@ -128,6 +128,14 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
+# --- Scratchpad (hidden windows you can pop up anywhere) ---
+# Super+Shift+- stashes the focused window; Super+- shows/hides it (cycles if several)
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+# myx music player (in foot for album art): Super+M opens it first time, then shows/hides it
+bindsym $mod+m exec swaymsg '[app_id="myx"] scratchpad show' || foot --app-id myx ~/.cargo/bin/myx
+for_window [app_id="myx"] move scratchpad, resize set 1400 800, scratchpad show
+
 # --- Workspaces (same keys as niri) ---
 # Each monitor has its own 1-9, like niri (see ~/.local/bin/sway-ws.sh).
 bindsym $mod+1 exec ~/.local/bin/sway-ws.sh focus 1
@@ -150,9 +158,9 @@ bindsym $mod+Shift+8 exec ~/.local/bin/sway-ws.sh move 8
 bindsym $mod+Shift+9 exec ~/.local/bin/sway-ws.sh move 9
 
 # --- Screenshots (same as niri) ---
-bindsym Print exec ~/.local/bin/sway-shot.sh region
+bindsym Print exec ~/.local/bin/sway-shot.sh noctalia
 bindsym Ctrl+Print exec ~/.local/bin/sway-shot.sh edit
-bindsym Mod1+Print exec ~/.local/bin/sway-shot.sh window
+bindsym Mod1+Print exec ~/.local/bin/sway-shot.sh pick
 bindsym Shift+Print exec ~/.local/bin/sway-shot.sh freeze
 
 # --- Session ---
